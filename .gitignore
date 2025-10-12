@@ -1,0 +1,25 @@
+    # Node.js dependencies
+    node_modules/
+
+    # Environment variables
+    .env
+    .env.local
+
+    # IDE-specific files (e.g., VS Code)
+    .vscode/
+    .idea/
+
+    # Build output and temporary files
+    dist/
+    build/
+    *.log
+    *.tmp
+    *.swp
+    *.swo
+
+    # OS-specific files
+    .DS_Store
+    Thumbs.db
+
+    # Coverage reports (if you use testing frameworks)
+    coverage/
