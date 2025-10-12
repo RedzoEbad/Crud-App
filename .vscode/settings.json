@@ -1,0 +1,8 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/2f1f3e42-48e8-41e8-a8ec-ae1aaffaab59/resourceGroups/NewWebApp/providers/Microsoft.Web/sites/MyFirstWebApp222",
+    "appService.deploySubpath": "Server",
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ]
+}
