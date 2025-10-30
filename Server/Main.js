@@ -26,5 +26,5 @@ connectDb();
 
 // ✅ Start server
 server.listen(Port, () => {
-  console.log(`✅ Server started on port number ${Port}`);
+  console.log(`✅ Server started on port number ${Port} go get it `);
 });
