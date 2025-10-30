@@ -10,42 +10,40 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read # required for checkout
+      contents: read
 
     steps:
-      # 1️⃣ Checkout the repository
       - uses: actions/checkout@v4
 
-      # 2️⃣ Set up Node.js (same as before)
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '22.x'
 
-      # 3️⃣ Build the frontend
-      - name: Build frontend
-        working-directory: ./frontend
+      # 🏗️ Build Frontend
+      - name: Build Frontend
+        working-directory: ./Frontend   # ✅ capitalized correctly
         run: |
           npm install
           npm run build
 
-      # 4️⃣ Copy the built frontend files to backend/dist
-      - name: Move frontend build to backend/dist
+      # 📦 Copy frontend build to Backend/dist
+      - name: Move frontend build to Backend/dist
         run: |
-          mkdir -p backend/dist
-          cp -r frontend/dist/* backend/dist/
+          mkdir -p Backend/dist
+          cp -r Frontend/dist/* Backend/dist/
 
-      # 5️⃣ Install backend dependencies
-      - name: Install backend dependencies
-        working-directory: ./backend
+      # 🧩 Install Backend dependencies
+      - name: Install Backend dependencies
+        working-directory: ./Backend   # ✅ capitalized correctly
         run: npm install
 
-      # 6️⃣ Upload the backend folder (with frontend included) for deployment
+      # 📤 Upload for deployment
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-          path: ./backend
+          path: ./Backend   # ✅ capitalized correctly
 
   deploy:
     runs-on: ubuntu-latest
@@ -55,13 +53,11 @@ jobs:
       contents: read
 
     steps:
-      # 7️⃣ Download the artifact from the build job
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
           name: node-app
       
-      # 8️⃣ Log in to Azure
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -69,11 +65,10 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_C1D978E65F01409485E1DA17F5C7F560 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_089E214838A1432D93FDCD18B9BE85BB }}
 
-      # 9️⃣ Deploy only the backend (which now contains frontend build)
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'MyCrudApp'
           slot-name: 'Production'
-          package: ./backend
+          package: ./Backend   # ✅ capitalized correctly
