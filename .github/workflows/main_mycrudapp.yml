@@ -13,37 +13,39 @@ jobs:
       contents: read
 
     steps:
+      # 1️⃣ Checkout code
       - uses: actions/checkout@v4
 
+      # 2️⃣ Setup Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '22.x'
 
-      # 🏗️ Build Frontend
+      # 3️⃣ Build Frontend
       - name: Build Frontend
-        working-directory: ./Frontend   # ✅ capitalized correctly
+        working-directory: ./Frontend   # ✅ matches your repo
         run: |
           npm install
           npm run build
 
-      # 📦 Copy frontend build to Backend/dist
-      - name: Move frontend build to Backend/dist
+      # 4️⃣ Move Frontend build into Server/dist
+      - name: Move frontend build to Server/dist
         run: |
-          mkdir -p Backend/dist
-          cp -r Frontend/dist/* Backend/dist/
+          mkdir -p Server/dist
+          cp -r Frontend/dist/* Server/dist/
 
-      # 🧩 Install Backend dependencies
-      - name: Install Backend dependencies
-        working-directory: ./Backend   # ✅ capitalized correctly
+      # 5️⃣ Install Server dependencies
+      - name: Install Server dependencies
+        working-directory: ./Server    # ✅ changed from Backend → Server
         run: npm install
 
-      # 📤 Upload for deployment
+      # 6️⃣ Upload artifact (Server only)
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-          path: ./Backend   # ✅ capitalized correctly
+          path: ./Server               # ✅ updated
 
   deploy:
     runs-on: ubuntu-latest
@@ -53,11 +55,13 @@ jobs:
       contents: read
 
     steps:
+      # 7️⃣ Download artifact from build
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
           name: node-app
       
+      # 8️⃣ Login to Azure
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -65,10 +69,11 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_C1D978E65F01409485E1DA17F5C7F560 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_089E214838A1432D93FDCD18B9BE85BB }}
 
+      # 9️⃣ Deploy to Azure Web App
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'MyCrudApp'
           slot-name: 'Production'
-          package: ./Backend   # ✅ capitalized correctly
+          package: ./Server             # ✅ updated to Server
