@@ -62,4 +62,5 @@ jobs:
           app-name: 'CrudApp12'
           slot-name: 'Production'
           package: .
+
           
